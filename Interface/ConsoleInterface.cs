@@ -10,7 +10,7 @@ namespace ConsoleApp1.Interface
 {
     public class ConsoleInterface
     {
-        private List<ICommand> commands;
+        private readonly List<ICommand> commands;
         private Graph graph;
 
         public ConsoleInterface(Graph graph)
@@ -78,6 +78,14 @@ namespace ConsoleApp1.Interface
                 catch (FileNotFoundException)
                 {
                     Console.WriteLine("ОШИБКА! Файл не найден");
+                }
+                catch (NotDualGraphException)
+                {
+                    Console.WriteLine("ОШИБКА! Граф не двудольный");
+                }
+                catch (NullReferenceException)
+                {
+                    Console.WriteLine("ОШИБКА! Необходимо создать или загрузить граф");
                 }
                 catch
                 {

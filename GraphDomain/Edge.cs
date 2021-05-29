@@ -12,6 +12,8 @@ namespace GraphDomain
 
         public int EndNumber => end.Number;
 
+        public Vertex End => end;
+
         public Edge(int data, Vertex end)
         {
             Data = data;

@@ -15,6 +15,7 @@ namespace GraphDomain
         public Graph()
         {
             vertices = new List<Vertex>();
+            isOriented = false;
         }
         
         public Graph(bool isOriented)
@@ -51,6 +52,26 @@ namespace GraphDomain
                 AddEdge(line[0], line[1], line[2]);
             }
         }
+        
+        public void InitDualGraph(StreamReader stream)
+        {
+            var initLine = stream.ReadLine()?.Split(' ').Select(int.Parse).ToArray();
+            InitEmptyGraph(initLine[0] + initLine[1],false);
+            var currentV = 1;
+            while (!stream.EndOfStream)
+            {
+                var currentU = initLine[0]+1;
+                var line = stream.ReadLine()?.Split(' ').Select(int.Parse).ToArray();
+                foreach (var w in line)
+                {
+                    if(w > 0)
+                        AddEdge(currentV,currentU,w);
+                    currentU++;
+                }
+
+                currentV++;
+            }
+        }
 
         public void AddVertex(int number)
         {
@@ -62,7 +83,7 @@ namespace GraphDomain
 
         public void AddEdge(int startNum, int endNum, int data, bool isReversedEdge = false)
         {
-            if(vertices.Single(v=>v.Number == startNum).Edges.Count(e=>e.EndNumber == endNum) > 0)
+            if(vertices.Single(v => v.Number == startNum).Edges.Any(e => e.EndNumber == endNum))
                 throw new EdgeAlreadyExistsException($"Edge {startNum}-{endNum} already exists");
 
             if (data < 0)
@@ -106,15 +127,50 @@ namespace GraphDomain
         
         public IEnumerable<string> GetOutputByMatrix()
         {
-            
-            foreach (var vertex in vertices)
-                yield return string.Join(" ", vertex.Edges.GetWeightOrZero(vertices.Select(v => v.Number)).Select(n=>n.ToString().PadLeft(5)));
+            return vertices.Select(vertex => string.Join(" ", vertex.Edges.GetWeightOrZero(vertices.Select(v => v.Number)).Select(n=>n.ToString().PadLeft(5))));
         }
 
         public IEnumerable<string> GetOutputByList()
         {
-            foreach (var vertex in vertices)
-                yield return vertex.Number + " " + String.Join(" ",vertex.Edges.Select(edge =>$"{edge.EndNumber}({edge.Data})"));
+            return vertices.Select(vertex => vertex.Number + " " + string.Join(" ",vertex.Edges.Select(edge =>$"{edge.EndNumber}({edge.Data})")));
+        }
+
+        private Dictionary<Vertex, bool> GetParts()
+        {
+            var parts = new Dictionary<Vertex, bool> {{vertices[0], true}};
+            var queue = new Queue<Vertex>();
+            queue.Enqueue(vertices[0]);
+
+            while(queue.Count != 0)
+            {
+                var vertex = queue.Dequeue();
+                foreach (var edge in vertex.Edges)
+                {
+
+                    if (parts.ContainsKey(edge.End) && parts.ContainsKey(vertex) && parts[edge.End] == parts[vertex])
+                        throw new NotDualGraphException();
+
+                    if (parts.ContainsKey(edge.End)) continue;
+                    
+                    queue.Enqueue(edge.End);
+                    parts.Add(edge.End, !parts[vertex]);
+                }
+            }
+
+            return parts;
+        }
+
+        public IEnumerable<IEnumerable<int>> GetDualMatrix()
+        {
+            var parts = GetParts();
+            
+            return  parts
+                .OrderBy(p=>p.Key.Number)
+                .Where((p) => p.Value)
+                .Select(p => p.Key)
+                .GetWeightOrZero(parts.Where(p => !p.Value).Select(p => p.Key.Number));
+
+
         }
     }
 }

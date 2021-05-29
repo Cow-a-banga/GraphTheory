@@ -8,6 +8,7 @@ namespace ConsoleApp1.Interface
         {
            console.Register(new CreateGraphCommand());
            console.Register(new ReadGraphCommand());
+           console.Register(new ReadDualGraphCommand());
            console.Register(new AddVertexCommand());
            console.Register(new AddEdgeCommand());
            console.Register(new DeleteEdgeCommand());
@@ -15,6 +16,7 @@ namespace ConsoleApp1.Interface
            console.Register(new MatrixOutputCommand());
            console.Register(new ListOutputCommand());
            console.Register(new SetOutputCommand());
+           console.Register(new DualMatrixOutputCommand());
         }
     }
 }

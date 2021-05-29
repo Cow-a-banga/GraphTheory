@@ -5,27 +5,23 @@ namespace GraphDomain
 {
     public class Vertex
     {
-        private List<Edge> edges;
+        private readonly List<Edge> edges;
 
-        public int Number { get; private set; }
+        private readonly int number;
+        public int Number => number;
 
         public IEnumerable<Edge> Edges => edges;
 
         public Vertex(int number)
         {
-            Number = number;
+            this.number = number;
             edges = new List<Edge>();
         }
 
         public Vertex(int number, List<Edge> edges)
         {
-            Number = number;
+            this.number = number;
             this.edges = edges;
-        }
-
-        public void AddEdge(Edge edge)
-        {
-            edges.Add(edge);
         }
 
         public void AddEdge(int data, Vertex end)
@@ -36,6 +32,19 @@ namespace GraphDomain
         public void DeleteEdge(int endVertex)
         {
             edges.RemoveAll(e => e.EndNumber == endVertex);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is Vertex v)
+                return Number.Equals(v.Number);
+            else
+                return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return number.GetHashCode();
         }
     }
 }
