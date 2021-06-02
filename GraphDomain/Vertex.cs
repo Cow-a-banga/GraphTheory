@@ -26,7 +26,7 @@ namespace GraphDomain
 
         public void AddEdge(int data, Vertex end)
         {
-            edges.Add(new Edge(data,end));
+            edges.Add(new Edge(data,end,this));
         }
 
         public void DeleteEdge(int endVertex)

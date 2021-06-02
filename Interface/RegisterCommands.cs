@@ -17,6 +17,7 @@ namespace ConsoleApp1.Interface
            console.Register(new ListOutputCommand());
            console.Register(new SetOutputCommand());
            console.Register(new DualMatrixOutputCommand());
+           console.Register(new GetMaxMatchingCommand());
         }
     }
 }

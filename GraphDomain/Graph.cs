@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Algorithms;
 using Extensions;
 using Exceptions;
 
@@ -11,6 +12,8 @@ namespace GraphDomain
     {
         private bool isOriented;
         private List<Vertex> vertices;
+
+        public IEnumerable<Vertex> Vertices => vertices;
 
         public Graph()
         {
@@ -135,42 +138,16 @@ namespace GraphDomain
             return vertices.Select(vertex => vertex.Number + " " + string.Join(" ",vertex.Edges.Select(edge =>$"{edge.EndNumber}({edge.Data})")));
         }
 
-        private Dictionary<Vertex, bool> GetParts()
-        {
-            var parts = new Dictionary<Vertex, bool> {{vertices[0], true}};
-            var queue = new Queue<Vertex>();
-            queue.Enqueue(vertices[0]);
 
-            while(queue.Count != 0)
-            {
-                var vertex = queue.Dequeue();
-                foreach (var edge in vertex.Edges)
-                {
-
-                    if (parts.ContainsKey(edge.End) && parts.ContainsKey(vertex) && parts[edge.End] == parts[vertex])
-                        throw new NotDualGraphException();
-
-                    if (parts.ContainsKey(edge.End)) continue;
-                    
-                    queue.Enqueue(edge.End);
-                    parts.Add(edge.End, !parts[vertex]);
-                }
-            }
-
-            return parts;
-        }
 
         public IEnumerable<IEnumerable<int>> GetDualMatrix()
         {
-            var parts = GetParts();
+            var parts = DualsMatching.GetParts(this).OrderBy(p=>p.Key.Number);
             
             return  parts
-                .OrderBy(p=>p.Key.Number)
-                .Where((p) => p.Value)
+                .Where((p) => !p.Value)
                 .Select(p => p.Key)
-                .GetWeightOrZero(parts.Where(p => !p.Value).Select(p => p.Key.Number));
-
-
+                .GetWeightOrZero(parts.Where(p => p.Value).Select(p => p.Key.Number));
         }
     }
 }

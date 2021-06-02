@@ -13,8 +13,10 @@ namespace Interface.Commands
         {
             if (args.Length == 1)
             {
-                StreamReader reader = new StreamReader(args[0]);
-                graph = new Graph(reader);
+                using (var reader = new StreamReader(args[0]))
+                {
+                    graph = new Graph(reader);
+                }
             }
             else
                 throw new IncorrectCommandException();

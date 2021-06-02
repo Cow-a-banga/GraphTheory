@@ -13,8 +13,10 @@ namespace Interface.Commands
             graph = new Graph();
             if (args.Length == 1)
             {
-                var reader = new StreamReader(args[0]);
-                graph.InitDualGraph(reader);
+                using (var reader = new StreamReader(args[0]))
+                {
+                    graph.InitDualGraph(reader);
+                }
             }
             else
                 throw new IncorrectCommandException();
