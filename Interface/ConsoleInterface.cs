@@ -87,6 +87,10 @@ namespace ConsoleApp1.Interface
                 {
                     Console.WriteLine("ОШИБКА! Необходимо создать или загрузить граф");
                 }
+                catch (GraphNotNetException)
+                {
+                    Console.WriteLine("ОШИБКА! Граф не является сетью");
+                }
                 catch
                 {
                     Console.WriteLine("ОШИБКА! Неизвестная ошибка, возможно нарушен формат ввода в файл");

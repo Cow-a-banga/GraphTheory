@@ -18,6 +18,7 @@ namespace ConsoleApp1.Interface
            console.Register(new SetOutputCommand());
            console.Register(new DualMatrixOutputCommand());
            console.Register(new GetMaxMatchingCommand());
+           console.Register(new FindMaxFlowCommand());
         }
     }
 }

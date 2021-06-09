@@ -32,5 +32,10 @@ namespace GraphDomain
             
             return false;
         }
+
+        public override int GetHashCode()
+        {
+            return (Start.GetHashCode() + End.GetHashCode()).GetHashCode();
+        }
     }
 }

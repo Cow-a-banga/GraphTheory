@@ -58,7 +58,7 @@ namespace Algorithms
             if (isInM && vertex.Edges.All(e => !M.Contains(e)))
                 return null;
 
-            foreach (var edge in vertex.Edges.Where(e => M.Contains(e) == isInM && !marked.Contains(e.End))) //Добавить e.Reverse
+            foreach (var edge in vertex.Edges.Where(e => M.Contains(e) == isInM && !marked.Contains(e.End)))
             {
                 acc.Add(edge);
                 marked.Add(edge.End);
