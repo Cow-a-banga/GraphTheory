@@ -11,6 +11,7 @@ namespace Algorithms
             return FindWay(new List<Vertex>() {start}, end);
         }
 
+
         private static IEnumerable<Vertex> FindWay(IList<Vertex> way, Vertex end)
         {
             foreach (var edge in way.Last().Edges)

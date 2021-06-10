@@ -9,23 +9,30 @@ namespace Algorithms
     {
         public static Vertex Drain(Graph graph)
         {
-            var result =  graph.Vertices.SingleOrDefault(v=>!v.Edges.Any());
-            if (result != null)
-                return result;
+            try
+            {
+                return graph.Vertices.Single(v => !v.Edges.Any());
+			}
+			catch
+			{
+                throw new GraphNotNetException();
+			}
             
-            throw new GraphNotNetException();
         }
 
         public static Vertex Source(Graph graph)
         {
-            var result = graph.Vertices
-                .SingleOrDefault(vertex => graph.Vertices
-                    .All(v => v.Edges.Count(e => e.End.Equals(vertex)) == 0));
+            try
+            {
+                return graph.Vertices
+                    .Single(vertex => graph.Vertices
+                        .All(v => v.Edges.Count(e => e.End.Equals(vertex)) == 0));
+			}
+			catch
+			{
+                throw new GraphNotNetException();
+			}
 
-            if (result != null)
-                return result;
-            
-            throw new GraphNotNetException();
         }
     }
 }

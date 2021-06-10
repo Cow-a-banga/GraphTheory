@@ -13,6 +13,8 @@ namespace GraphDomain
         private bool isOriented;
         private List<Vertex> vertices;
 
+        public bool IsOriented { get { return isOriented; } }
+
         public IEnumerable<Vertex> Vertices => vertices;
 
         public Graph()
